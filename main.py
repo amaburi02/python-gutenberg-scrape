@@ -22,14 +22,33 @@ def search_books(search_term, csvfile = "pg_catalog.csv"):
         print("Not found")
     return results
 
+def get_download_url(id):
+    url = f"https://www.gutenberg.org/cache/epub/{id}"
+
+    #html
+    html_url = f"{url}/pg{id}.html"
+    response = requests.head(html_url)
+    if response.status_code == 200:
+        print("HTML url works")
+        return html_url
+    #txt
+    txt_url = f"{url}/pg{id}.txt"
+    response = requests.head(txt_url)
+    if response.status_code == 200:
+        print("Txt URL works")
+        return txt_url
+
 def main():
     search_term = input("Enter book title: ")
     results = search_books(search_term)
     for x in results:
         print(x)
     id = input("Enter id of desired book: ")
-    url = "https://www.gutenberg.org/cache/epub/" + id + "/pg" + id + ".txt"
+    url = get_download_url(id)
     print(url)
+    html_doc = requests.get(url)
+    soup = BeautifulSoup(html_doc.text, 'html.parser')
+    print(soup.get_text())
 
 if __name__ == "__main__":
     main()
