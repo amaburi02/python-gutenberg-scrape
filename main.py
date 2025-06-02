@@ -48,6 +48,8 @@ def main():
     print(url)
     html_doc = requests.get(url)
     soup = BeautifulSoup(html_doc.text, 'html.parser')
+    with open("output.txt", "w", encoding="utf-8") as f:
+        f.write(soup.get_text())
     print(soup.get_text())
 
 if __name__ == "__main__":
